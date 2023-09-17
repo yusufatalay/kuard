@@ -15,9 +15,12 @@ spec:
         periodSeconds: 10
         failureThreshold: 3
       resources: # resources requested per container not per pod
-        requests:
-          cpu: "500m" # 0.5 Mb
+        requests: # requested minimum resource
+          cpu: "500m" # 0.5 of a core - m is 10^-3
           memory: "120Mi" 
+        limits:   # maximum resource that the container would get
+          cpu: "1000m" # a core
+          memory: "256Mi"
       ports:
         - containerPort: 8080
           name: http
