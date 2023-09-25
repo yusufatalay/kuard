@@ -316,3 +316,13 @@ help:
 	@echo "  Setting VERBOSE=1 will show additional build logging."
 	@echo
 	@echo "  Setting VERSION_BASE will override the container version tag."
+
+.Phony: run-pods
+run-pods:
+	@echo "Applying pod manifest -> kuard-pod.yaml"
+	kubectl apply -f kuard-pod.yaml
+	@echo "Waiting pod to be available"
+	sleep 5
+	@echo "forwarding internal port 8080 to external 8080"
+	kubectl port-forward kuard 8080:8080
+	@echo "done"
