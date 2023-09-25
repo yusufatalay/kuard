@@ -3,6 +3,9 @@ kind: Pod
 metadata:
   name: kuard
 spec:
+  metadata:
+    annotations:
+      example.com/icon.url: "https://example.com/icon.jpg"
   volumes:
     - name: "kuard-data"
       hostPath:
