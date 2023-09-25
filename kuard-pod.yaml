@@ -4,9 +4,13 @@ metadata:
   name: kuard
 spec:
   volumes:
-    name: "kuard-data"
-    hostPath:
+    - name: "kuard-data"
+      hostPath:
       path: "/var/lib/kuard"
+    - name: "kuard-data-nfs"
+      nfs:
+        server: my.nfs.server.local
+        path: "/exports"
   containers:
     - image: gcr.io/kuar-demo/kuard-amd64:blue
       name: kuard
