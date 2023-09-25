@@ -16,12 +16,20 @@ spec:
       name: kuard
       volumeMounts:
         - mountPath : "/data"
-          name: "kuard-data"
+          name: "kuard-data" # could be kuard-data-nfs depending on where we want to store the persistent data
       livenessProbe:
         httpGet:
           path: /healthy
           port: 8080
         initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        initialDelaySecons: 30
         timeoutSeconds: 1
         periodSeconds: 10
         failureThreshold: 3
