@@ -6,7 +6,7 @@ spec:
   volumes:
     - name: "kuard-data"
       hostPath:
-      path: "/var/lib/kuard"
+        path: "/var/lib/kuard"
     - name: "kuard-data-nfs"
       nfs:
         server: my.nfs.server.local
@@ -29,7 +29,7 @@ spec:
         httpGet:
           path: /ready
           port: 8080
-        initialDelaySecons: 30
+        initialDelaySeconds: 30
         timeoutSeconds: 1
         periodSeconds: 10
         failureThreshold: 3
