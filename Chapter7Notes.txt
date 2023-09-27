@@ -1,0 +1,12 @@
+`kubectl create deployment` for creating a deployment 
+`kubectl scale --replicas ` for scaling the deployment
+`kubectl expose deployment` for creating a service out of the deployment
+
+To make first pod of the alpaca-prod pod group we can type
+```
+	export ALPACA_PROD=$(kubectl get pods -l app=alpaca-prod -o jsonpath='{.items[0].metadata.name}')
+
+	kubectl port-forward $ALPACA_PROD 48858:8080
+```
+this will forward firs pod of the alpaca-prod's internal 8080 to my computer's
+48858 and I can access it at localhost:48858
