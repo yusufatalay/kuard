@@ -1,0 +1,107 @@
+To use ingress and envoy locally (minikube)
+run
+`kubectl apply -f https://projectcontour.io/quickstart/contour.yaml`
+
+on a seperate terminal run
+`minikube tunnel`
+
+then modify your /etc/hosts to output of this command
+run this
+`kubectl get -n projectcontour service   envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}'`
+get the result, and add this line to the file
+<output> alpaca.example.com bandicoot.example.com
+
+now ingress controller has configured
+
+then create services to use ingress
+
+`kubectl create deployment be-default --image=gcr.io/kuar-demo/kuard-amd64:blue --replicas=3`
+`kubectl expose deployment be-default --port=8080`
+
+`kubectl create deployment alpaca --image=gcr.io/kuar-demo/kuard-amd64:green --replicas=3`
+`kubectl expose deployment alpaca --port=8080`
+
+`kubectl create deployment bandicoot --image=gcr.io/kuar-demo/kuard-amd64:purple --replicas=3`
+`kubectl expose deployment bandicoot --port=8080`
+
+output of `kubectl get services -o wide` should look like this
+
+```
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+alpaca       ClusterIP   10.102.222.179   <none>        8080/TCP   2m7s    app=alpaca
+bandicoot    ClusterIP   10.97.8.121      <none>        8080/TCP   9s      app=bandicoot
+be-default   ClusterIP   10.109.105.23    <none>        8080/TCP   4m50s   app=be-default
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    3d2h    <none>
+```
+
+for a simple use check simple-ingress.yaml in this directory
+
+then apply that yaml with `kubectl apply`
+
+after that when you type `kubectl get ingress` the output should be like this
+```
+	NAME             CLASS    HOSTS   ADDRESS     PORTS   AGE
+	simple-ingress   <none>   *       127.0.0.1   80      12s
+```
+
+and output of `kubectl describe ingress simple-ingress` should be like this
+
+```
+	Name:             simple-ingress
+Labels:           <none>
+Namespace:        default
+Address:          127.0.0.1
+Ingress Class:    <none>
+Default backend:  alpaca:8080 (10.244.0.31:8080,10.244.0.32:8080,10.244.0.33:8080)
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  *           *     alpaca:8080 (10.244.0.31:8080,10.244.0.32:8080,10.244.0.33:8080)
+Annotations:  <none>
+Events:       <none>
+```
+
+this means every http request that hits ingress's controller will forwarded to alpaca
+e.g alpaca.example.com , bandicoot.example.com
+
+------------------------------------------------------------------------------------
+
+for using hostnames check host-ingress.yaml in this directory
+
+apply it 
+
+now output of `kubectl get ingress` should look like this
+
+```
+	NAME             CLASS    HOSTS                ADDRESS     PORTS   AGE
+	host-ingress     <none>   alpaca.example.com   127.0.0.1   80      31s
+	simple-ingress   <none>   *                    127.0.0.1   80      14m
+```
+
+and output of `kubectl describe ingress simple-ingress` should look like this
+
+```
+Name:             simple-ingress
+Labels:           <none>
+Namespace:        default
+Address:          127.0.0.1
+Ingress Class:    <none>
+Default backend:  alpaca:8080 (10.244.0.31:8080,10.244.0.32:8080,10.244.0.33:8080)
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  *           *     alpaca:8080 (10.244.0.31:8080,10.244.0.32:8080,10.244.0.33:8080)
+Annotations:  <none>
+Events:       <none>
+```
+
+with this configuration hitting alpaca.example.com url will forwarded to alpaca service whilst any other urls will be forwarded to be-default service 
+
+------------------------------------------------------------------------------------------------
+
+check path-ingress.yaml for forwarding base on path, with that configuration, every hit to the 
+bandicoot.example.com will be forwarded to bandicoot service except bandicoot.example.com/a
+that endpoint will be handled by alpaca service
+
+"this feature can be usefull when hosting multiple services on different paths of a single domain"
+
