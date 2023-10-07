@@ -1,0 +1,16 @@
+when editing deployment file after running these commands
+```
+	kubectl get deployments <deploymentname> -o yaml > <deploymentyamlfile>
+	kubectl replace -f <deploymentyamlfile> --save-config
+```
+
+you should delete these lines from deployment yaml file
+
+```
+	  creationTimestamp:   
+  	  resourceVersion:  
+  	  selfLink:   
+  	  uid:   
+```
+
+then you can edit and apply the deployment yaml file decleratively
