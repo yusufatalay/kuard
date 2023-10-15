@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: "DaemonSet"
+metadata:
+  labels:
+    app: nginx
+    ssd: "true"
+  name: nginx-fast-storage
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+      ssd: "true"
+  template:
+    metadata:
+      labels:
+        app: nginx
+        ssd: "true"
+    spec:
+      nodeSelector:
+        ssd: "true" # create the daemon for the nodes that has ssd: true label
+      containers:
+        - name: nginx
+          image: nginx:1.10.0
