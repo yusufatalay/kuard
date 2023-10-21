@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding # To make this cluster scope use ClusterRoleBinding
+metadata:
+  namespace: default
+  name: pods-and-services
+subjects:
+  - apiGroup: rbac.authorization.k8s.io/v1
+    kind: User
+    name: yusuf
+  - apiGroup: rbac.authorization.k8s.io/v1
+    kind: Group
+    name: mydevs
+roleRef:
+  apiGroup: rback.authorization.k8s.io/v1
+  kind: Role
+  name: pod-and-services
+

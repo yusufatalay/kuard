@@ -1,0 +1,6 @@
+You should use 
+```
+	kubectl auth reconcile -f <rbac_config_file>
+```
+
+when registering a role or rolebinding, it is similar to the kubectl apply command

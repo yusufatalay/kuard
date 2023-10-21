@@ -1,0 +1,9 @@
+kind: Role # To make this cluste scoped use ClusterRole
+apiVersion: rbac.aurhorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: pod-and-services
+rules:
+  - apiGroups: [**]
+    resources: ["pods", "services"]
+    verbs: ["create","delete", "get", "list", "patch", "update", "watch"]
