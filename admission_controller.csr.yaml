@@ -1,0 +1,14 @@
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: validating-controller-default
+spec:
+  groups:
+    - system:unauthenticated
+  request: {REDACTED}
+  usages: 
+    - digital signature
+    - key encipherment
+    - key agreement
+    - server auth
+  signerName: example.com/desmondhume

@@ -1,0 +1,20 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: kuar-validator
+webhooks:
+  - name: validator.kuar.com
+    rules:
+      - apiGroups:
+          - "beta.kuar.com"
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - loadtests
+    clientConfig:
+      url: https://192.168.1.233:8080
+      caBundle: {REDACTED} 
+
+    
